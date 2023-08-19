@@ -75,4 +75,4 @@ def detail_path(path):
 if __name__ == '__main__':
 
 
-    app.run("0.0.0.0", 11451)
+    app.run("0.0.0.0", 80)
