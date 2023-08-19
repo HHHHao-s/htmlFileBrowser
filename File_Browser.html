@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<!-- saved from url=(0023)http://127.0.0.1/files/ -->
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+  <title>录制 - Files - File Browser</title>
+  <!-- <link rel="icon" type="image/png" sizes="32x32" href="http://127.0.0.1/static/img/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="http://127.0.0.1/static/img/icons/favicon-16x16.png"> -->
+  <!-- <link rel="manifest" id="manifestPlaceholder" crossorigin="use-credentials"
+    href="blob:http://127.0.0.1/4858a141-1fcd-42c1-84e5-6732d99c926a"> -->
+  <meta name="theme-color" content="#2979ff">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="assets">
+  <!-- <link rel="apple-touch-icon" href="http://127.0.0.1/static/img/icons/apple-touch-icon.png"> -->
+  <meta name="msapplication-TileImage" content="/static/img/icons/mstile-144x144.png">
+  <meta name="msapplication-TileColor" content="#2979ff">
+  <!-- <script>window.FileBrowser = JSON.parse('{"AuthMethod":"json","BaseURL":"","CSS":false,"Color":"","DisableExternal":false,"DisableUsedPercentage":false,"EnableExec":true,"EnableThumbs":true,"LoginPage":true,"Name":"","NoAuth":false,"ReCaptcha":false,"ResizePreview":false,"Signup":false,"StaticURL":"/static","Theme":"","TusSettings":{"chunkSize":10485760,"retryCount":5},"Version":"2.24.2"}');
+
+    var fullStaticURL = window.location.origin + window.FileBrowser.StaticURL;
+    var dynamicManifest = {
+      "name": window.FileBrowser.Name || 'File Browser',
+      "short_name": window.FileBrowser.Name || 'File Browser',
+      "icons": [
+        {
+          "src": fullStaticURL + "/img/icons/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "src": fullStaticURL + "/img/icons/android-chrome-512x512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ],
+      "start_url": window.location.origin + window.FileBrowser.BaseURL,
+      "display": "standalone",
+      "background_color": "#ffffff",
+      "theme_color": window.FileBrowser.Color || "#455a64"
+    }
+
+    const stringManifest = JSON.stringify(dynamicManifest);
+    const blob = new Blob([stringManifest], { type: 'application/json' });
+    const manifestURL = URL.createObjectURL(blob);
+    document.querySelector('#manifestPlaceholder').setAttribute('href', manifestURL);</script> -->
+  <style>
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      z-index: 9999;
+      transition: .1s ease opacity;
+      -webkit-transition: .1s ease opacity;
+    }
+
+    #loading.done {
+      opacity: 0;
+    }
+
+    #loading .spinner {
+      width: 70px;
+      text-align: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+
+    #loading .spinner>div {
+      width: 18px;
+      height: 18px;
+      background-color: #333;
+      border-radius: 100%;
+      display: inline-block;
+      -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+      animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+    }
+
+    #loading .spinner .bounce1 {
+      -webkit-animation-delay: -0.32s;
+      animation-delay: -0.32s;
+    }
+
+    #loading .spinner .bounce2 {
+      -webkit-animation-delay: -0.16s;
+      animation-delay: -0.16s;
+    }
+
+    @-webkit-keyframes sk-bouncedelay {
+
+      0%,
+      80%,
+      100% {
+        -webkit-transform: scale(0)
+      }
+
+      40% {
+        -webkit-transform: scale(1.0)
+      }
+    }
+
+    @keyframes sk-bouncedelay {
+
+      0%,
+      80%,
+      100% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+      }
+
+      40% {
+        -webkit-transform: scale(1.0);
+        transform: scale(1.0);
+      }
+    }
+  </style>
+  <!-- <link href="http://127.0.0.1/static/js/chunk-758869bc.396e4d1f.js" rel="prefetch"> -->
+  <link href="./File_Browser_files/app.1fbedfd4.css" rel="preload" as="style">
+  <link href="./File_Browser_files/chunk-vendors.e9e545fd.css" rel="preload" as="style">
+  <link href="./File_Browser_files/app.e21a005c.js.下载" rel="preload" as="script">
+  <link href="./File_Browser_files/chunk-vendors.a03c7f7d.js.下载" rel="preload" as="script">
+  <link href="./File_Browser_files/chunk-vendors.e9e545fd.css" rel="stylesheet">
+  <link href="./File_Browser_files/app.1fbedfd4.css" rel="stylesheet">
+</head>
+
+<body>
+  <div>
+    <div><!---->
+      <nav class=""><button aria-label="My files" title="My files" class="action"><i
+            class="material-icons">folder</i><span>My files</span></button>
+        <div><button aria-label="New folder" title="New folder" class="action"><i
+              class="material-icons">create_new_folder</i><span>New folder</span></button><button aria-label="New file"
+            title="New file" class="action"><i class="material-icons">note_add</i><span>New file</span></button></div>
+        <div><button aria-label="Settings" title="Settings" class="action"><i
+              class="material-icons">settings_applications</i><span>Settings</span></button><button id="logout"
+            aria-label="Logout" title="Logout" class="action"><i
+              class="material-icons">exit_to_app</i><span>Logout</span></button></div>
+        <div class="credits" style="width: 90%; margin: 2em 2.5em 3em;">
+          <div><!---->
+            <div class="vue-simple-progress" style="background: rgb(238, 238, 238);"><!----> <!---->
+              <div class="vue-simple-progress-bar"
+                style="background: rgb(33, 150, 243); width: 92%; height: 4px; transition: all 0.5s ease 0s;"><!---->
+              </div>
+            </div> <!---->
+          </div><br> 396 GiB of 431 GiB used
+        </div>
+        <p class="credits"><span><a rel="noopener noreferrer" target="_blank"
+              href="https://github.com/filebrowser/filebrowser">File Browser</a><span>
+              2.24.2</span></span><span><a>Help</a></span></p>
+      </nav>
+      <main>
+        <div><!---->
+          <div class="breadcrumbs"><a href="http://127.0.0.1/files" aria-current="page"
+              class="router-link-exact-active router-link-active" aria-label="Home" title="Home"><i
+                class="material-icons">home</i></a></div>
+          <div>
+            <header><img src="./File_Browser_files/logo.svg"><button aria-label="Toggle sidebar"
+                title="Toggle sidebar" class="action menu-button"><i class="material-icons">menu</i><span>Toggle
+                  sidebar</span><!----></button>
+              <div id="search" class="">
+                <div id="input"><i class="material-icons">search</i><input type="text" aria-label="Search..."
+                    placeholder="Search..."></div>
+                <div id="result">
+                  <div>
+                    <p>Type to search...</p>
+                    <div class="boxes">
+                      <h3>Types</h3>
+                      <div>
+                        <div tabindex="0" role="button" aria-label="Images"><i class="material-icons">insert_photo</i>
+                          <p>Images</p>
+                        </div>
+                        <div tabindex="0" role="button" aria-label="Music"><i class="material-icons">volume_up</i>
+                          <p>Music</p>
+                        </div>
+                        <div tabindex="0" role="button" aria-label="Video"><i class="material-icons">movie</i>
+                          <p>Video</p>
+                        </div>
+                        <div tabindex="0" role="button" aria-label="PDF"><i class="material-icons">picture_as_pdf</i>
+                          <p>PDF</p>
+                        </div>
+                      </div>
+                    </div>
+                    <ul style="display: none;"></ul>
+                  </div>
+                  <p id="renew"><i class="material-icons spin">autorenew</i></p>
+                </div>
+              </div>
+              <title></title><button aria-label="Search" title="Search" class="action search-button"><i
+                  class="material-icons">search</i><span>Search</span><!----></button>
+              <div id="dropdown" class=""><!----><!----><!----><!----><!----><button aria-label="Toggle shell"
+                  title="Toggle shell" class="action"><i class="material-icons">code</i><span>Toggle
+                    shell</span><!----></button><button aria-label="Switch view" title="Switch view" class="action"><i
+                    class="material-icons">view_module</i><span>Switch view</span><!----></button><button
+                  aria-label="Download" title="Download" class="action"><i
+                    class="material-icons">file_download</i><span>Download</span><!----></button><button
+                  aria-label="Upload" title="Upload" class="action" id="upload-button"><i
+                    class="material-icons">file_upload</i><span>Upload</span><!----></button><button aria-label="Info"
+                  title="Info" class="action"><i class="material-icons">info</i><span>Info</span><!----></button><button
+                  aria-label="Select multiple" title="Select multiple" class="action"><i
+                    class="material-icons">check_circle</i><span>Select multiple</span><!----></button></div><button
+                aria-label="More" title="More" class="action" id="more"><i
+                  class="material-icons">more_vert</i><span>More</span><!----></button>
+              <div class="overlay" style="display: none;"></div>
+            </header><!---->
+            <div id="listing" class="list file-icons">
+              <div>
+                <div class="item header">
+                  <div></div>
+                  <div>
+                    <p role="button" tabindex="0" title="Sort by name" aria-label="Sort by name" class="name active">
+                      <span>Name</span><i class="material-icons">arrow_downward</i></p>
+                    <p role="button" tabindex="0" title="Sort by size" aria-label="Sort by size" class="size">
+                      <span>Size</span><i class="material-icons">arrow_upward</i></p>
+                    <p role="button" tabindex="0" title="Sort by last modified" aria-label="Sort by last modified"
+                      class="modified"><span>Last modified</span><i class="material-icons">arrow_upward</i></p>
+                  </div>
+                </div>
+              </div>
+              <h2>Folders</h2>
+              <div>
+                <div role="button" tabindex="0" draggable="true" data-dir="true" data-type="" aria-label="爬"
+                  class="item">
+                  <div><i class="material-icons"></i></div>
+                  <div>
+                    <p class="name">爬</p>
+                    <p data-order="-1" class="size">—</p>
+                    <p class="modified"><time datetime="2023-08-04T14:55:40.0392362+08:00">15 days ago</time></p>
+                  </div>
+                </div>
+                <div role="button" tabindex="0" draggable="true" data-dir="true" data-type="" aria-label="viedos"
+                  class="item">
+                  <div><i class="material-icons"></i></div>
+                  <div>
+                    <p class="name">viedos</p>
+                    <p data-order="-1" class="size">—</p>
+                    <p class="modified"><time datetime="2023-07-01T21:22:02.8932296+08:00">2 months ago</time></p>
+                  </div>
+                </div>
+                <div role="button" tabindex="0" draggable="true" data-dir="true" data-type="" aria-label="pan"
+                  class="item">
+                  <div><i class="material-icons"></i></div>
+                  <div>
+                    <p class="name">pan</p>
+                    <p data-order="-1" class="size">—</p>
+                    <p class="modified"><time datetime="2023-07-08T10:19:22.0013636+08:00">a month ago</time></p>
+                  </div>
+                </div>
+                <div role="button" tabindex="0" draggable="true" data-dir="true" data-type="" aria-label="asmr"
+                  class="item">
+                  <div><i class="material-icons"></i></div>
+                  <div>
+                    <p class="name">asmr</p>
+                    <p data-order="-1" class="size">—</p>
+                    <p class="modified"><time datetime="2023-02-16T13:55:05.6333617+08:00">6 months ago</time></p>
+                  </div>
+                </div>
+                <div role="button" tabindex="0" draggable="true" data-dir="true" data-type="" aria-label="ai"
+                  class="item">
+                  <div><i class="material-icons"></i></div>
+                  <div>
+                    <p class="name">ai</p>
+                    <p data-order="-1" class="size">—</p>
+                    <p class="modified"><time datetime="2023-03-03T19:25:12.4166798+08:00">6 months ago</time></p>
+                  </div>
+                </div>
+              </div>
+              <h2>Files</h2>
+              <div>
+                <div role="button" tabindex="0" draggable="true" data-type="text" aria-label="web.config" class="item">
+                  <div><i class="material-icons"></i></div>
+                  <div>
+                    <p class="name">web.config</p>
+                    <p data-order="168 B" class="size">168 B</p>
+                    <p class="modified"><time datetime="2023-02-15T15:28:27.90185+08:00">6 months ago</time></p>
+                  </div>
+                </div>
+                <div role="button" tabindex="0" draggable="true" data-type="text" aria-label="urlfailed.txt"
+                  class="item">
+                  <div><i class="material-icons"></i></div>
+                  <div>
+                    <p class="name">urlfailed.txt</p>
+                    <p data-order="3.91 KB" class="size">3.91 KB</p>
+                    <p class="modified"><time datetime="2023-08-04T14:41:52.5612229+08:00">15 days ago</time></p>
+                  </div>
+                </div>
+                <div role="button" tabindex="0" draggable="true" data-type="video"
+                  aria-label="bandicam 2022-11-14 23-37-07-042.mp4" class="item">
+                  <div><i class="material-icons"></i></div>
+                  <div>
+                    <p class="name">bandicam 2022-11-14 23-37-07-042.mp4</p>
+                    <p data-order="2.03 MB" class="size">2.03 MB</p>
+                    <p class="modified"><time datetime="2022-11-14T23:38:20.5721405+08:00">9 months ago</time></p>
+                  </div>
+                </div>
+                <div role="button" tabindex="0" draggable="true" data-type="video"
+                  aria-label="bandicam 2022-09-07 13-00-29-605.mp4" class="item">
+                  <div><i class="material-icons"></i></div>
+                  <div>
+                    <p class="name">bandicam 2022-09-07 13-00-29-605.mp4</p>
+                    <p data-order="7.95 MB" class="size">7.95 MB</p>
+                    <p class="modified"><time datetime="2022-09-07T13:01:35.8769499+08:00">a year ago</time></p>
+                  </div>
+                </div>
+              </div><input type="file" id="upload-input" multiple="multiple" style="display: none;"><input type="file"
+                id="upload-folder-input" webkitdirectory="" multiple="multiple" style="display: none;">
+              <div id="multiple-selection" class="">
+                <p>Multiple selection enabled</p>
+                <div tabindex="0" role="button" title="Clear" aria-label="Clear" class="action"><i
+                    class="material-icons">clear</i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="shell shell--hidden">
+          <div class="shell__result">
+            <div class="shell__prompt"><i class="material-icons">chevron_right</i></div>
+            <pre tabindex="0" contenteditable="true" class="shell__text"></pre>
+          </div>
+        </div>
+      </main>
+      <div><!---->
+        <div class="overlay" style="display: none;"></div>
+      </div><!---->
+    </div>
+  </div>
+  <!-- <script src="./File_Browser_files/chunk-vendors.a03c7f7d.js.下载"></script>
+  <script src="./File_Browser_files/app.e21a005c.js.下载"></script> -->
+</body>
+
+</html>

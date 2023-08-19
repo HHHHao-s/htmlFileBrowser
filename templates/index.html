@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Disk Browser</title>
+    <style>
+      /* Style for the navigation bar */
+
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f2f2f2;
+        padding: 10px;
+      }
+      nav button {
+        display: flex;
+        align-items: center;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+      nav button:hover {
+        background-color: #ddd;
+      }
+      nav button i {
+        margin-right: 5px;
+      }
+      nav button span {
+        font-size: 14px;
+      }
+      /* Style for the main content */
+      main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+      }
+      main h1 {
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+      main ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        width: 80%;
+      }
+      main li {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+      }
+      main li:hover {
+        background-color: #f2f2f2;
+      }
+      main li i {
+        margin-right: 10px;
+      }
+      main li span {
+        font-size: 16px;
+      }
+      img {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+
+    </nav>
+    <main>
+      <h1>Files</h1>
+      <ul>
+        <li onclick="location.href='/{{ path }}/..'">
+            <i class="material-icons">folder</i><span>..</span>
+        </li>
+        {% for folder in folders %}
+          <li onclick="location.href='/{{ path }}/{{ folder }}'">
+            <i class="material-icons">folder</i><span>{{ folder }}</span>
+          </li>
+        {% endfor %}
+        {% for pic in pics %}
+          <li><img src="/{{ path }}/{{ pic }}" alt="Image description"></li>
+        {% endfor %}
+        {% for video in videos %}
+          <li><video width="100%" height="auto" controls poster="video-cover.jpg">
+            <source src="/{{ path }}/{{ video }}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video></li>
+        {% endfor %}
+
+{#        <li><i class="material-icons">folder</i><span>Folder 1</span></li>#}
+{#        <li><img src="pic/7671e7afda93b7f3271deeece5be9fa165ccdaa8.jpg" alt="Image description" style="width: 100%;"></li>#}
+{#        <li><video width="100%" height="auto" controls poster="video-cover.jpg">#}
+{#            <source src="video.mp4" type="video/mp4">#}
+{#            Your browser does not support the video tag.#}
+{#          </video>#}
+{#        </li>#}
+    </ul>
+    </main>
+  </body>
+</html>
