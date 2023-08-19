@@ -1,9 +1,11 @@
 from flask import Flask, template_rendered, render_template, send_file, make_response, request
-
+from werkzeug.datastructures import Headers
 import os
 import re
+import socket
 
-from werkzeug.datastructures import Headers
+hostname = socket.gethostname()
+ip_address = socket.gethostbyname(hostname)
 
 app = Flask(__name__)
 
@@ -34,7 +36,7 @@ def render(path):
             elif video_pattern.search(file):
                 videos.append(file)
 
-        return render_template('index.html', folders=folders, videos=videos, pics=pics, path=path)
+        return render_template('index.html', folders=folders, videos=videos, pics=pics, path=path, ip=ip_address)
     else:
         if(video_pattern.search(abs_path)):
             range_header = request.headers.get('Range', None)
@@ -70,9 +72,9 @@ def index():  # put application's code here
 @app.route('/<path:path>')
 def detail_path(path):
 
-    return render(path)
+    return render(path+'/')
 
 if __name__ == '__main__':
 
 
-    app.run("0.0.0.0", 80)
+    app.run(host="0.0.0.0",port= 80)
