@@ -3,18 +3,29 @@ from werkzeug.datastructures import Headers
 import os
 import re
 import socket
+import sys
 
 hostname = socket.gethostname()
 ip_address = socket.gethostbyname(hostname)
 
 app = Flask(__name__)
 
-root_dir = "I:\\录制"
+root_dir = ""
+if(len(sys.argv)==1):
+    root_dir = "D:\\dabiaoge"
+else:
+    root_dir = sys.argv[1]
+
+
+
 pic_pattern = re.compile(r'\.(jpg|jpeg|png|gif|bmp)$', re.IGNORECASE)
 video_pattern = re.compile(r'\.(mp4|avi|rmvb|rm|flv|wmv|mkv)$', re.IGNORECASE)
 
 def render(path):
+
     abs_path = os.path.join(root_dir, path)
+
+    # print(abs_path)
 
     if not os.path.exists(abs_path):
         return "path not exists"
@@ -36,30 +47,42 @@ def render(path):
             elif video_pattern.search(file):
                 videos.append(file)
 
+        print(folders)
+        print(videos)
+        print(pics)
+        if(path!=""):
+            path += '/'
+
         return render_template('index.html', folders=folders, videos=videos, pics=pics, path=path, ip=ip_address)
     else:
         if(video_pattern.search(abs_path)):
             range_header = request.headers.get('Range', None)
             if range_header:
-                match = re.search(r'bytes=(\d+)-\d*', range_header)
+                match = re.search(r'bytes=(\d+)-(\d*)', range_header)
                 sk = int(match.group(1))
+                if(range_header[-1]!='-'):
+                    end = int(match.group(2))
+                else:
+                    end = 1024*1024*2+sk
             else:
                 sk = 0
 
-            cwd = os.getcwd()
 
             with open(abs_path, 'rb') as fr:
                 fr.seek(0, 2)
                 total = fr.tell()
                 fr.seek(sk)
-                chunk = fr.read(1024 * 1024 * 2)
-                end = sk + len(chunk) - 1
+                need_to_read = end-sk
+                chunk = fr.read(need_to_read)
+                end = sk + len(chunk) -1
                 headers = Headers()
                 headers.add('Accept-Ranges', 'bytes')
                 headers.add('Content-Type', 'application/octet-stream')
                 headers.add('Content-Range', 'bytes {}-{}/{}'.format(sk, end, total))
+                headers.add('Content-Length', end-sk)
                 return make_response(chunk, 206, headers)
-        else:
+        elif (pic_pattern.search(abs_path)):
+            print("in pic")
             return send_file(abs_path)
 
 
@@ -72,7 +95,10 @@ def index():  # put application's code here
 @app.route('/<path:path>')
 def detail_path(path):
 
-    return render(path+'/')
+    print(path)
+    ret = render(path)
+    print(ret)
+    return ret
 
 if __name__ == '__main__':
 
