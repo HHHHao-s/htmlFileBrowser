@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 root_dir = ""
 if(len(sys.argv)==1):
-    root_dir = "D:\\dabiaoge"
+    root_dir = "I:\\录制"
 else:
     root_dir = sys.argv[1]
 

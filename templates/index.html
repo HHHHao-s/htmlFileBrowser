@@ -46,15 +46,17 @@
         display: none;
       }
     </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body>
-    <nav>
-
-    </nav>
     <main>
-      <h1>Files</h1>
+      <nav>
+        <a href="/" title="Home"><i class="material-icons">home</i></a>
+      </nav>
+
+      <h1>{{ path }}</h1>
       <ul>
-        <li onclick="location.href='/{{ path }}..'">
+        <li onclick="location.href='/{{ "/".join(path.split("/")[0:-2]) }}'">
             <i class="material-icons">folder</i><span>..</span>
         </li>
         {% for folder in folders %}
@@ -66,20 +68,16 @@
           <li><img src="/{{ path }}{{ pic }}" alt="Image description"></li>
         {% endfor %}
         {% for video in videos %}
-          <li><video width="100%" height="auto" controls poster="video-cover.jpg">
+          <li>
+            <video width="100%" height="auto" controls>
             <source src="/{{ path }}{{ video }}" type="video/mp4">
             Your browser does not support the video tag.
           </video></li>
         {% endfor %}
 
-{#        <li><i class="material-icons">folder</i><span>Folder 1</span></li>#}
-{#        <li><img src="pic/7671e7afda93b7f3271deeece5be9fa165ccdaa8.jpg" alt="Image description" style="width: 100%;"></li>#}
-{#        <li><video width="100%" height="auto" controls poster="video-cover.jpg">#}
-{#            <source src="video.mp4" type="video/mp4">#}
-{#            Your browser does not support the video tag.#}
-{#          </video>#}
-{#        </li>#}
+
     </ul>
     </main>
+
   </body>
 </html>
