@@ -45,6 +45,22 @@
       i {
         display: none;
       }
+      .img-box{
+        width:100%;
+        height:0;
+        position: relative;
+        padding-bottom: 100%;
+          display: table-cell;
+        text-align: left;
+        vertical-align: middle;
+        overflow: hidden;
+      }
+      .img-box img{
+        width:100%;
+        height:100%;
+        position: absolute;
+        object-fit: cover;
+      }
     </style>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
@@ -61,7 +77,10 @@
         </li>
         {% for folder in folders %}
           <li onclick="location.href='/{{ path }}{{ folder }}'">
-            <i class="material-icons">folder</i><span>{{ folder }}</span>
+            <div class="img-box">
+              <img src="/{{ path }}{{ folder_pic[loop.index0] }}" alt="Image description" title="{{ folder }}">
+            </div>
+
           </li>
         {% endfor %}
         {% for pic in pics %}

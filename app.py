@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 root_dir = ""
 if(len(sys.argv)==1):
-    root_dir = "I:\\录制"
+    root_dir = "D:\\录像"
 else:
     root_dir = sys.argv[1]
 
@@ -34,14 +34,22 @@ def render(path):
 
         files = os.listdir(abs_path)
 
-
         folders = []
+        folder_pic = []
         videos = []
         pics = []
 
         for file in files:
             if os.path.isdir(os.path.join(abs_path, file)):
                 folders.append(file)
+                found = False
+                for pic in os.listdir(os.path.join(abs_path, file)):
+                    if pic_pattern.search(pic):
+                        folder_pic.append(os.path.join(file, pic))
+                        found = True
+                        break
+                if(not found):
+                    folder_pic.append("static/folder.jpg")
             elif pic_pattern.search(file):
                 pics.append(file)
             elif video_pattern.search(file):
@@ -50,10 +58,11 @@ def render(path):
         print(folders)
         print(videos)
         print(pics)
+        print(folder_pic)
         if(path!=""):
             path += '/'
 
-        return render_template('index.html', folders=folders, videos=videos, pics=pics, path=path, ip=ip_address)
+        return render_template('index.html', folders=folders, videos=videos, pics=pics, path=path, ip=ip_address, folder_pic=folder_pic)
     else:
         if(video_pattern.search(abs_path)):
             range_header = request.headers.get('Range', None)
