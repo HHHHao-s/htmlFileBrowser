@@ -38,29 +38,29 @@ def render(path):
         folder_pic = []
         videos = []
         pics = []
-
+        if(path!=""):
+            path += '/'
         for file in files:
             if os.path.isdir(os.path.join(abs_path, file)):
-                folders.append(file)
+                folders.append(path + file)
                 found = False
                 for pic in os.listdir(os.path.join(abs_path, file)):
                     if pic_pattern.search(pic):
-                        folder_pic.append(os.path.join(file, pic))
+                        folder_pic.append(os.path.join( path +file, pic))
                         found = True
                         break
                 if(not found):
                     folder_pic.append("static/folder.jpg")
             elif pic_pattern.search(file):
-                pics.append(file)
+                pics.append( path +file)
             elif video_pattern.search(file):
-                videos.append(file)
+                videos.append(path +file)
 
-        print(folders)
-        print(videos)
-        print(pics)
-        print(folder_pic)
-        if(path!=""):
-            path += '/'
+        # print(folders)
+        # print(videos)
+        # print(pics)
+        # print(folder_pic)
+        
 
         return render_template('index.html', folders=folders, videos=videos, pics=pics, path=path, ip=ip_address, folder_pic=folder_pic)
     else:
@@ -96,6 +96,13 @@ def render(path):
 
 
 
+def terminate():
+    print("in terminate")
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+
 
 @app.route('/')
 def index():  # put application's code here
@@ -103,13 +110,16 @@ def index():  # put application's code here
 
 @app.route('/<path:path>')
 def detail_path(path):
-
     print(path)
+    if(path=="terminate"):
+        terminate()
+
+
     ret = render(path)
-    print(ret)
+
     return ret
 
 if __name__ == '__main__':
 
 
-    app.run(host="0.0.0.0",port= 80)
+    app.run(host="0.0.0.0",port= 49996)

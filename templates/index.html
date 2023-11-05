@@ -68,7 +68,11 @@
     <main>
       <nav>
         <a href="/" title="Home"><i class="material-icons">home</i></a>
+        <a onclick="location.href='/terminate'">
+          <i class="material-icons">close</i>
+        </a>
       </nav>
+
 
       <h1>{{ path }}</h1>
       <ul>
@@ -78,18 +82,19 @@
         {% for folder in folders %}
           <li onclick="location.href='/{{ path }}{{ folder }}'">
             <div class="img-box">
-              <img src="/{{ path }}{{ folder_pic[loop.index0] }}" alt="Image description" title="{{ folder }}">
+              <p style="text-align: center;font-size: 50px">{{ folder }}</p>
+              <img src="/{{ folder_pic[loop.index0] }}" alt="Image description" title="{{ folder }}">
             </div>
 
           </li>
         {% endfor %}
         {% for pic in pics %}
-          <li><img src="/{{ path }}{{ pic }}" alt="Image description"></li>
+          <li><img src="/{{ pic }}" alt="Image description"></li>
         {% endfor %}
         {% for video in videos %}
           <li>
             <video width="100%" height="auto" controls>
-            <source src="/{{ path }}{{ video }}" type="video/mp4">
+            <source src="/{{ video }}" type="video/mp4">
             Your browser does not support the video tag.
           </video></li>
         {% endfor %}
